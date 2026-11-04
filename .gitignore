@@ -3,5 +3,10 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+
+# Modelos treinados e resultados
 *.pt
 runs/
+
+# Arquivos temporários do YOLO
+*.cache
