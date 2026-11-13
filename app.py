@@ -8,6 +8,7 @@ import os
 import cv2
 import pandas as pd
 import subprocess
+import shutil
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -36,16 +37,35 @@ st.set_page_config(
 # CAMINHO DO FFMPEG
 # ==========================================
 
-CAMINHO_FFMPEG = os.path.join(
-    os.environ["LOCALAPPDATA"],
-    "Microsoft",
-    "WinGet",
-    "Packages",
-    "Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe",
-    "ffmpeg-9.0.2-full_build",
-    "bin",
-    "ffmpeg.exe"
-)
+def localizar_ffmpeg():
+    caminho_env = os.environ.get("FFMPEG_PATH")
+    if caminho_env and os.path.exists(caminho_env):
+        return caminho_env
+
+    caminho_path = shutil.which("ffmpeg")
+    if caminho_path:
+        return caminho_path
+
+    local_appdata = os.environ.get("LOCALAPPDATA")
+    if local_appdata:
+        caminho_winget = os.path.join(
+            local_appdata,
+            "Microsoft",
+            "WinGet",
+            "Packages",
+            "Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe",
+            "ffmpeg-9.0.2-full_build",
+            "bin",
+            "ffmpeg.exe"
+        )
+
+        if os.path.exists(caminho_winget):
+            return caminho_winget
+
+    return None
+
+
+CAMINHO_FFMPEG = localizar_ffmpeg()
 
 
 # ==========================================
@@ -66,10 +86,11 @@ def carregar_modelo():
 
 def converter_video_h264(caminho_entrada, caminho_saida):
 
-    if not os.path.exists(CAMINHO_FFMPEG):
+    if not CAMINHO_FFMPEG or not os.path.exists(CAMINHO_FFMPEG):
 
         raise FileNotFoundError(
-            "FFmpeg não encontrado no caminho configurado."
+            "FFmpeg não encontrado. Instale o FFmpeg e adicione-o ao PATH "
+            "ou defina a variável de ambiente FFMPEG_PATH."
         )
 
     comando = [
