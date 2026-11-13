@@ -94,19 +94,40 @@ O modelo foi treinado utilizando os seguintes parâmetros:
 | Épocas | 20 |
 | Tamanho da imagem | 320 × 320 |
 | Batch size | 4 |
-| Dispositivo | CPU |
+| Dispositivo | GPU AMD Radeon RX 9060 XT (ROCm 6.4) |
 | Dataset | NEU-DET |
+
+Ambiente: Ultralytics 8.4.211, PyTorch 2.9.1 (ROCm 6.4), Python 3.11.
 
 ### Métricas gerais de validação
 
+Avaliação no conjunto de validação (360 imagens, 854 defeitos anotados):
+
 | Métrica | Resultado |
 |---|---:|
-| Precisão (Precision) | 0,634 |
-| Revocação (Recall) | 0,611 |
-| mAP@50 | 0,693 |
-| mAP@50-95 | 0,363 |
+| Precisão (Precision) | 0,760 |
+| Revocação (Recall) | 0,604 |
+| mAP@50 | 0,691 |
+| mAP@50-95 | 0,351 |
 
-Os resultados representam a primeira versão treinada do modelo. O desempenho varia entre as seis classes de defeitos.
+Tempo de inferência: aproximadamente 1,8 ms por imagem (GPU).
+
+### Métricas por classe
+
+| Classe | Imagens | Instâncias | Precisão | Revocação | mAP@50 | mAP@50-95 |
+|---|---:|---:|---:|---:|---:|---:|
+| crazing | 60 | 162 | 1,000 | 0,015 | 0,442 | 0,163 |
+| inclusion | 71 | 159 | 0,732 | 0,773 | 0,808 | 0,430 |
+| patches | 73 | 193 | 0,811 | 0,860 | 0,918 | 0,574 |
+| pitted_surface | 60 | 87 | 0,890 | 0,667 | 0,780 | 0,397 |
+| rolled-in_scale | 60 | 132 | 0,607 | 0,439 | 0,480 | 0,225 |
+| scratches | 60 | 121 | 0,518 | 0,868 | 0,721 | 0,320 |
+
+### Análise
+
+- As classes `patches` e `inclusion` apresentaram os melhores resultados.
+- A classe `crazing` é o principal ponto fraco. (revocação de 0,015)
+- A classe `rolled-in_scale` também apresenta desempenho abaixo da média.
 
 ## Estrutura do projeto
 
