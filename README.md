@@ -254,6 +254,7 @@ http://localhost:8501
 - João Pedro Alexandre
 - Lívia Barbosa
 - Pedro Holanda
+- Matheus Kirchesch
 
 ## Disciplina
 
